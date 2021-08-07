@@ -5,17 +5,19 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider.serv
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
-import { isBefore, isToday } from 'date-fns';
+import { isAfter, isBefore, isToday } from 'date-fns';
 import { flatten } from 'lodash';
 
 import { MarketDataService } from './market-data.service';
+import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
 
 @Injectable()
 export class CurrentRateService {
   public constructor(
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly marketDataService: MarketDataService
+    private readonly marketDataService: MarketDataService,
+    private readonly exchangeRateService: ExchangeRateService
   ) {}
 
   public async getValue({
@@ -72,6 +74,13 @@ export class CurrentRateService {
       }[]
     >[] = [];
 
+    const sourceCurrencies = Object.values(currencies);
+    const exchangeRates = await this.exchangeRateService.getExchangeRates({
+      dateQuery,
+      sourceCurrencies,
+      destinationCurrency: userCurrency
+    });
+
     if (includeToday) {
       const today = resetHours(new Date());
       promises.push(
@@ -100,17 +109,35 @@ export class CurrentRateService {
           symbols
         })
         .then((data) => {
-          return data.map((marketDataItem) => {
-            return {
-              date: marketDataItem.date,
-              marketPrice: this.exchangeRateDataService.toCurrency(
-                marketDataItem.marketPrice,
-                currencies[marketDataItem.symbol],
-                userCurrency
-              ),
-              symbol: marketDataItem.symbol
-            };
-          });
+          const result = [];
+          let j = 0;
+          for (const marketDataItem of data) {
+            while (
+              j + 1 < exchangeRates.length &&
+              !isAfter(exchangeRates[j + 1].date, marketDataItem.date)
+            ) {
+              j++;
+            }
+            const currency = currencies[marketDataItem.symbol];
+            let exchangeRate = exchangeRates[j].exchangeRates[currency];
+            for (
+              let k = j;
+              k >= 0 && !exchangeRates[k].exchangeRates[currency];
+              k--
+            ) {
+              exchangeRate = exchangeRates[k].exchangeRates[currency];
+            }
+            if (exchangeRate) {
+              result.push({
+                date: marketDataItem.date,
+                marketPrice: exchangeRate
+                  .mul(marketDataItem.marketPrice)
+                  .toNumber(),
+                symbol: marketDataItem.symbol
+              });
+            }
+          }
+          return result;
         })
     );
 

@@ -21,6 +21,7 @@ import { Module } from '@nestjs/common';
 
 import { PortfolioController } from './portfolio.controller';
 import { PortfolioService } from './portfolio.service';
+import { ExchangeRateService } from '@ghostfolio/api/app/exchange-rate/exchange-rate.service';
 
 @Module({
   imports: [RedisCacheModule],
@@ -34,6 +35,7 @@ import { PortfolioService } from './portfolio.service';
     DataGatheringService,
     DataProviderService,
     ExchangeRateDataService,
+    ExchangeRateService,
     GhostfolioScraperApiService,
     ImpersonationService,
     MarketDataService,

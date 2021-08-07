@@ -76,9 +76,14 @@ export class ExchangeRateService {
           currentRates[`${destinationCurrency}${sourceCurrency}`]
         );
       } else {
-        exchangeRate = currentRates[
-          `${Currency.USD}${destinationCurrency}`
-        ].div(currentRates[`${Currency.USD}${sourceCurrency}`]);
+        if (
+          currentRates[`${Currency.USD}${destinationCurrency}`] &&
+          currentRates[`${Currency.USD}${sourceCurrency}`]
+        ) {
+          exchangeRate = currentRates[
+            `${Currency.USD}${destinationCurrency}`
+          ].div(currentRates[`${Currency.USD}${sourceCurrency}`]);
+        }
       }
       if (exchangeRate) {
         result[sourceCurrency] = exchangeRate;

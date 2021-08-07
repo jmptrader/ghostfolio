@@ -10,6 +10,7 @@ import { Module } from '@nestjs/common';
 
 import { CurrentRateService } from './current-rate.service';
 import { MarketDataService } from './market-data.service';
+import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
 
 @Module({
   imports: [],
@@ -20,6 +21,7 @@ import { MarketDataService } from './market-data.service';
     CurrentRateService,
     DataProviderService,
     ExchangeRateDataService,
+    ExchangeRateService,
     GhostfolioScraperApiService,
     MarketDataService,
     PrismaService,

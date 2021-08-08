@@ -10,6 +10,7 @@ import { flatten } from 'lodash';
 
 import { MarketDataService } from './market-data.service';
 import { ExchangeRateService } from '../exchange-rate/exchange-rate.service';
+import { Big } from 'big.js';
 
 @Injectable()
 export class CurrentRateService {
@@ -112,20 +113,26 @@ export class CurrentRateService {
           const result = [];
           let j = 0;
           for (const marketDataItem of data) {
+            const currency = currencies[marketDataItem.symbol];
             while (
               j + 1 < exchangeRates.length &&
               !isAfter(exchangeRates[j + 1].date, marketDataItem.date)
             ) {
               j++;
             }
-            const currency = currencies[marketDataItem.symbol];
-            let exchangeRate = exchangeRates[j].exchangeRates[currency];
-            for (
-              let k = j;
-              k >= 0 && !exchangeRates[k].exchangeRates[currency];
-              k--
-            ) {
-              exchangeRate = exchangeRates[k].exchangeRates[currency];
+            let exchangeRate: Big;
+            if (currency !== userCurrency) {
+              exchangeRate = exchangeRates[j]?.exchangeRates[currency];
+
+              for (
+                let k = j;
+                k >= 0 && !exchangeRates[k]?.exchangeRates[currency];
+                k--
+              ) {
+                exchangeRate = exchangeRates[k]?.exchangeRates[currency];
+              }
+            } else {
+              exchangeRate = new Big(1);
             }
             if (exchangeRate) {
               result.push({

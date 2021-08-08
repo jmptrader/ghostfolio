@@ -1,6 +1,5 @@
-import { DataProviderService } from '@ghostfolio/api/services/data-provider.service';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { GhostfolioScraperApiService } from '@ghostfolio/api/services/data-provider/ghostfolio-scraper-api/ghostfolio-scraper-api.service';
-import { convertFromYahooSymbol } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import { Injectable } from '@nestjs/common';
 import { Currency, DataSource } from '@prisma/client';
 
@@ -37,7 +36,8 @@ export class SymbolService {
       results.items = items;
 
       // Add custom symbols
-      const scraperConfigurations = await this.ghostfolioScraperApiService.getScraperConfigurations();
+      const scraperConfigurations =
+        await this.ghostfolioScraperApiService.getScraperConfigurations();
       scraperConfigurations.forEach((scraperConfiguration) => {
         if (scraperConfiguration.name.toLowerCase().startsWith(aQuery)) {
           results.items.push({

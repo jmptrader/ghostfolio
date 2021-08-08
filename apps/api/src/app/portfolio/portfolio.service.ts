@@ -1,9 +1,9 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { CurrentRateService } from '@ghostfolio/api/app/core/current-rate.service';
-import { PortfolioOrder } from '@ghostfolio/api/app/core/interfaces/portfolio-order.interface';
-import { TimelineSpecification } from '@ghostfolio/api/app/core/interfaces/timeline-specification.interface';
-import { TransactionPoint } from '@ghostfolio/api/app/core/interfaces/transaction-point.interface';
-import { PortfolioCalculator } from '@ghostfolio/api/app/core/portfolio-calculator';
+import { CurrentRateService } from './current-rate.service';
+import { PortfolioOrder } from './interfaces/portfolio-order.interface';
+import { TimelineSpecification } from './interfaces/timeline-specification.interface';
+import { TransactionPoint } from './interfaces/transaction-point.interface';
+import { PortfolioCalculator } from './portfolio-calculator';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';

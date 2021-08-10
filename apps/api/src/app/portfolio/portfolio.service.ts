@@ -1,9 +1,4 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
-import { CurrentRateService } from './current-rate.service';
-import { PortfolioOrder } from './interfaces/portfolio-order.interface';
-import { TimelineSpecification } from './interfaces/timeline-specification.interface';
-import { TransactionPoint } from './interfaces/transaction-point.interface';
-import { PortfolioCalculator } from './portfolio-calculator';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { OrderType } from '@ghostfolio/api/models/order-type';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
@@ -18,7 +13,6 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation.service';
 import { EnhancedSymbolProfile } from '@ghostfolio/api/services/interfaces/symbol-profile.interface';
-import { RulesService } from './rules.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
@@ -54,10 +48,16 @@ import {
 } from 'date-fns';
 import { isEmpty } from 'lodash';
 
+import { CurrentRateService } from './current-rate.service';
+import { PortfolioOrder } from './interfaces/portfolio-order.interface';
 import {
   HistoricalDataItem,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
+import { TimelineSpecification } from './interfaces/timeline-specification.interface';
+import { TransactionPoint } from './interfaces/transaction-point.interface';
+import { PortfolioCalculator } from './portfolio-calculator';
+import { RulesService } from './rules.service';
 
 @Injectable()
 export class PortfolioService {
